@@ -1,6 +1,6 @@
 {
   "charts": [],
-  "content": "[{\"id\":\"header\",\"type\":\"header\",\"data\":{\"text\":\"AMP - App for Managing Projects\",\"level\":3}},{\"id\":\"shortcuts\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Shortcuts\"}},{\"id\":\"cards\",\"type\":\"card\",\"data\":{\"card_name\":\"Cards\"}}]",
+  "content": "[{\"id\":\"hdr_shortcuts\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"sc_drawings\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Drawings Register\",\"col\":3}},{\"id\":\"sc_progress\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quick Site Progress Entry\",\"col\":3}},{\"id\":\"sc_dpr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Daily Progress Reports\",\"col\":3}},{\"id\":\"sc_pr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Requests (PR)\",\"col\":3}},{\"id\":\"spacer_1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"hdr_masters\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Project Management & Site Execution</b></span>\",\"col\":12}},{\"id\":\"card_drawings\",\"type\":\"card\",\"data\":{\"card_name\":\"Drawings & Revisions\",\"col\":4}},{\"id\":\"card_progress\",\"type\":\"card\",\"data\":{\"card_name\":\"Site Execution & Daily Progress\",\"col\":4}},{\"id\":\"card_procurement\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement & Stock\",\"col\":4}}]",
   "creation": "2026-09-12 18:40:00.000000",
   "custom_blocks": [],
   "docstatus": 0,
@@ -17,133 +17,105 @@
       "hidden": 0,
       "is_query_report": 0,
       "label": "Drawings & Revisions",
-      "link_count": 0,
+      "link_count": 4,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Project Drawing",
+      "link_to": "Project Drawing",
       "link_type": "DocType",
-      "links": [
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Project Drawing",
-          "link_count": 0,
-          "link_to": "Project Drawing",
-          "link_type": "DocType",
-          "onboard": 1,
-          "type": "Link"
-        },
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Drawing Revision",
-          "link_count": 0,
-          "link_to": "Drawing Revision",
-          "link_type": "DocType",
-          "type": "Link"
-        },
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Project Main Area",
-          "link_count": 0,
-          "link_to": "Project Main Area",
-          "link_type": "DocType",
-          "type": "Link"
-        },
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Project Sub Area",
-          "link_count": 0,
-          "link_to": "Project Sub Area",
-          "link_type": "DocType",
-          "type": "Link"
-        }
-      ],
-      "type": "Card"
+      "onboard": 1,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Drawing Revision",
+      "link_to": "Drawing Revision",
+      "link_type": "DocType",
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Project Main Area",
+      "link_to": "Project Main Area",
+      "link_type": "DocType",
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Project Sub Area",
+      "link_to": "Project Sub Area",
+      "link_type": "DocType",
+      "type": "Link"
     },
     {
       "hidden": 0,
       "is_query_report": 0,
       "label": "Site Execution & Daily Progress",
-      "link_count": 0,
-      "link_type": "DocType",
-      "links": [
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Site Progress Quick Entry",
-          "link_count": 0,
-          "link_to": "site-progress-entry",
-          "link_type": "Page",
-          "onboard": 1,
-          "type": "Link"
-        },
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Daily Progress Report",
-          "link_count": 0,
-          "link_to": "Daily Progress Report",
-          "link_type": "DocType",
-          "onboard": 1,
-          "type": "Link"
-        }
-      ],
-      "type": "Card"
+      "link_count": 2,
+      "type": "Card Break"
     },
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "Procurement & Stock Integration",
-      "link_count": 0,
+      "label": "Site Progress Quick Entry",
+      "link_to": "site-progress-entry",
+      "link_type": "Page",
+      "onboard": 1,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Daily Progress Report",
+      "link_to": "Daily Progress Report",
       "link_type": "DocType",
-      "links": [
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Material Request",
-          "link_count": 0,
-          "link_to": "Material Request",
-          "link_type": "DocType",
-          "type": "Link"
-        },
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Purchase Order",
-          "link_count": 0,
-          "link_to": "Purchase Order",
-          "link_type": "DocType",
-          "type": "Link"
-        },
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Purchase Receipt",
-          "link_count": 0,
-          "link_to": "Purchase Receipt",
-          "link_type": "DocType",
-          "type": "Link"
-        },
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Stock Entry",
-          "link_count": 0,
-          "link_to": "Stock Entry",
-          "link_type": "DocType",
-          "type": "Link"
-        },
-        {
-          "hidden": 0,
-          "is_query_report": 0,
-          "label": "Item",
-          "link_count": 0,
-          "link_to": "Item",
-          "link_type": "DocType",
-          "type": "Link"
-        }
-      ],
-      "type": "Card"
+      "onboard": 1,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Procurement & Stock",
+      "link_count": 4,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Material Request",
+      "link_to": "Material Request",
+      "link_type": "DocType",
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Purchase Order",
+      "link_to": "Purchase Order",
+      "link_type": "DocType",
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Purchase Receipt",
+      "link_to": "Purchase Receipt",
+      "link_type": "DocType",
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Stock Entry",
+      "link_to": "Stock Entry",
+      "link_type": "DocType",
+      "type": "Link"
     }
   ],
   "modified": "2026-09-12 18:40:00.000000",
@@ -154,17 +126,7 @@
   "parent_page": "",
   "public": 1,
   "quick_lists": [],
-  "roles": [
-    {
-      "role": "System Manager"
-    },
-    {
-      "role": "Projects Manager"
-    },
-    {
-      "role": "Projects User"
-    }
-  ],
+  "roles": [],
   "sequence_id": 1.0,
   "shortcuts": [
     {
