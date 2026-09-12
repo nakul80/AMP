@@ -1,0 +1,108 @@
+.site-progress-container {
+    padding: 15px;
+}
+
+.site-progress-filter-card {
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.site-progress-table-card {
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.site-progress-table-wrapper {
+    overflow-x: auto;
+    max-height: 650px;
+}
+
+.site-progress-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.site-progress-table th {
+    background-color: var(--bg-light-gray, #f8fafc);
+    color: var(--text-muted, #64748b);
+    font-weight: 600;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--border-color, #e2e8f0);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.site-progress-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-color, #f1f5f9);
+    vertical-align: middle;
+}
+
+.site-progress-table tr:hover {
+    background-color: var(--bg-color-hover, #f8fafc);
+}
+
+.site-input-qty {
+    width: 100px;
+    font-weight: 600;
+    text-align: right;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 4px 8px;
+    transition: border-color 0.2s;
+}
+
+.site-input-qty:focus {
+    border-color: var(--primary, #1e40af);
+    background-color: #f0fdf4;
+    outline: none;
+}
+
+.site-input-text {
+    width: 130px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.progress-bar-container {
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    height: 8px;
+    width: 90px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: #10b981;
+    transition: width 0.3s ease;
+}
+
+.discipline-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.discipline-Civil { background-color: #e0f2fe; color: #0369a1; }
+.discipline-Structural { background-color: #fef3c7; color: #b45309; }
+.discipline-Excavation { background-color: #fce7f3; color: #be185d; }
+.discipline-Piping { background-color: #dcfce7; color: #15803d; }
+.discipline-Ducting { background-color: #ede9fe; color: #6d28d9; }

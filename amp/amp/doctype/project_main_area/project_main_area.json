@@ -1,0 +1,118 @@
+{
+  "actions": [],
+  "autoname": "format:{project}-{area_code}",
+  "creation": "2026-09-12 18:40:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "project",
+    "area_code",
+    "area_name",
+    "column_break_1",
+    "is_active",
+    "description"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Project",
+      "options": "Project",
+      "reqd": 1
+    },
+    {
+      "fieldname": "area_code",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Area Code",
+      "reqd": 1
+    },
+    {
+      "fieldname": "area_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Area Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "1",
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "label": "Is Active"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    }
+  ],
+  "links": [
+    {
+      "group": "Sub Areas",
+      "link_doctype": "Project Sub Area",
+      "link_fieldname": "main_area"
+    },
+    {
+      "group": "Drawings",
+      "link_doctype": "Project Drawing",
+      "link_fieldname": "main_area"
+    }
+  ],
+  "modified": "2026-09-12 18:40:00.000000",
+  "modified_by": "Administrator",
+  "module": "AMP",
+  "name": "Project Main Area",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Projects Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 0,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Projects User",
+      "share": 0,
+      "write": 0
+    }
+  ],
+  "quick_entry": 1,
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "area_name",
+  "track_changes": 1
+}

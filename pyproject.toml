@@ -1,0 +1,20 @@
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "amp"
+authors = [
+    { name = "PMG Team", email = "info@example.com"}
+]
+description = "AMP - App for Managing Projects (Drawings, BOQ Quantity Takeoff, Procurement Indents & Daily Site Progress with WIP Material Consumption for ERPNext v16)"
+requires-python = ">=3.10"
+readme = "README.md"
+dynamic = ["version"]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/example/amp"
+
+[tool.flit.module]
+name = "amp"

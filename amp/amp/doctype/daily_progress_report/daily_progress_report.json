@@ -1,0 +1,285 @@
+{
+  "actions": [],
+  "autoname": "naming_series:",
+  "creation": "2026-09-12 18:40:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "naming_series",
+    "project",
+    "posting_date",
+    "main_area",
+    "sub_area",
+    "column_break_1",
+    "supervisor",
+    "contractor",
+    "work_shift",
+    "weather",
+    "amended_from",
+    "section_site_notes",
+    "site_photo_1",
+    "site_photo_2",
+    "column_break_photos",
+    "site_photo_3",
+    "general_remarks",
+    "section_progress",
+    "progress_items",
+    "section_stock_consumption",
+    "auto_create_stock_entry",
+    "stock_entry_type",
+    "source_warehouse",
+    "column_break_wh",
+    "target_warehouse",
+    "stock_entry",
+    "material_consumptions"
+  ],
+  "fields": [
+    {
+      "default": "DPR-.YYYY.-.#####",
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Series",
+      "no_copy": 1,
+      "options": "DPR-.YYYY.-.#####",
+      "reqd": 1,
+      "set_only_once": 1
+    },
+    {
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Project",
+      "options": "Project",
+      "reqd": 1
+    },
+    {
+      "default": "Today",
+      "fieldname": "posting_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Posting Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "main_area",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Main Area",
+      "options": "Project Main Area",
+      "reqd": 1
+    },
+    {
+      "fieldname": "sub_area",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Sub Area",
+      "options": "Project Sub Area"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "__user",
+      "fieldname": "supervisor",
+      "fieldtype": "Link",
+      "label": "Supervisor in Charge",
+      "options": "User"
+    },
+    {
+      "fieldname": "contractor",
+      "fieldtype": "Link",
+      "label": "Contractor / Gang",
+      "options": "Supplier"
+    },
+    {
+      "default": "General Shift",
+      "fieldname": "work_shift",
+      "fieldtype": "Select",
+      "label": "Work Shift",
+      "options": "General Shift\nDay Shift\nNight Shift"
+    },
+    {
+      "default": "Sunny",
+      "fieldname": "weather",
+      "fieldtype": "Select",
+      "label": "Weather Condition",
+      "options": "Sunny\nPartly Cloudy\nOvercast\nRainy\nHeavy Rain\nExtreme Heat\nDust Storm"
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Daily Progress Report",
+      "print_hide": 1,
+      "read_only": 1
+    },
+    {
+      "collapsible": 1,
+      "fieldname": "section_site_notes",
+      "fieldtype": "Section Break",
+      "label": "Site Photos & General Observations"
+    },
+    {
+      "fieldname": "site_photo_1",
+      "fieldtype": "Attach Image",
+      "label": "Site Photo 1"
+    },
+    {
+      "fieldname": "site_photo_2",
+      "fieldtype": "Attach Image",
+      "label": "Site Photo 2"
+    },
+    {
+      "fieldname": "column_break_photos",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "site_photo_3",
+      "fieldtype": "Attach Image",
+      "label": "Site Photo 3"
+    },
+    {
+      "fieldname": "general_remarks",
+      "fieldtype": "Small Text",
+      "label": "General Site Remarks / Obstacles"
+    },
+    {
+      "fieldname": "section_progress",
+      "fieldtype": "Section Break",
+      "label": "Daily Work Progress Executed"
+    },
+    {
+      "fieldname": "progress_items",
+      "fieldtype": "Table",
+      "label": "Progress Items",
+      "options": "Daily Progress Item",
+      "reqd": 1
+    },
+    {
+      "collapsible": 1,
+      "fieldname": "section_stock_consumption",
+      "fieldtype": "Section Break",
+      "label": "WIP & Material Consumption Integration"
+    },
+    {
+      "default": "1",
+      "fieldname": "auto_create_stock_entry",
+      "fieldtype": "Check",
+      "label": "Auto-Create ERPNext Stock Entry on Submit"
+    },
+    {
+      "default": "Material Issue",
+      "depends_on": "eval:doc.auto_create_stock_entry==1",
+      "fieldname": "stock_entry_type",
+      "fieldtype": "Select",
+      "label": "Stock Entry Purpose",
+      "options": "Material Issue\nMaterial Transfer"
+    },
+    {
+      "depends_on": "eval:doc.auto_create_stock_entry==1",
+      "fieldname": "source_warehouse",
+      "fieldtype": "Link",
+      "label": "Source Warehouse (Site Store)",
+      "options": "Warehouse"
+    },
+    {
+      "fieldname": "column_break_wh",
+      "fieldtype": "Column Break"
+    },
+    {
+      "depends_on": "eval:doc.auto_create_stock_entry==1 && doc.stock_entry_type=='Material Transfer'",
+      "fieldname": "target_warehouse",
+      "fieldtype": "Link",
+      "label": "Target Warehouse (WIP)",
+      "options": "Warehouse"
+    },
+    {
+      "fieldname": "stock_entry",
+      "fieldtype": "Link",
+      "label": "Generated Stock Entry",
+      "no_copy": 1,
+      "options": "Stock Entry",
+      "read_only": 1
+    },
+    {
+      "fieldname": "material_consumptions",
+      "fieldtype": "Table",
+      "label": "Material Consumption Details",
+      "options": "DPR Material Consumption"
+    }
+  ],
+  "is_submittable": 1,
+  "links": [
+    {
+      "group": "Inventory",
+      "link_doctype": "Stock Entry",
+      "link_fieldname": "daily_progress_report"
+    }
+  ],
+  "modified": "2026-09-12 18:40:00.000000",
+  "modified_by": "Administrator",
+  "module": "AMP",
+  "name": "Daily Progress Report",
+  "naming_rule": "By \"Naming Series\" field",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Projects Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "amend": 0,
+      "cancel": 0,
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Projects User",
+      "share": 0,
+      "submit": 1,
+      "write": 1
+    }
+  ],
+  "quick_entry": 0,
+  "sort_field": "posting_date",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "name",
+  "track_changes": 1
+}

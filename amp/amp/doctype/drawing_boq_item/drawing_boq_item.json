@@ -1,0 +1,168 @@
+{
+  "actions": [],
+  "creation": "2026-09-12 18:40:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "item_code",
+    "item_name",
+    "discipline",
+    "description",
+    "column_break_1",
+    "uom",
+    "estimated_qty",
+    "wastage_percent",
+    "total_budget_qty",
+    "section_tracking",
+    "requested_qty",
+    "ordered_qty",
+    "received_qty",
+    "column_break_2",
+    "executed_qty",
+    "balance_to_order",
+    "balance_to_execute"
+  ],
+  "fields": [
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Item Code",
+      "options": "Item",
+      "reqd": 1
+    },
+    {
+      "fetch_from": "item_code.item_name",
+      "fieldname": "item_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Item Name",
+      "read_only": 1
+    },
+    {
+      "fieldname": "discipline",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Discipline / Trade",
+      "options": "Excavation\nCivil\nStructural\nPiping\nDucting\nRailings & Secondary Structural\nOther",
+      "reqd": 1
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fetch_from": "item_code.stock_uom",
+      "fieldname": "uom",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "UOM",
+      "options": "UOM",
+      "reqd": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "estimated_qty",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Estimated Qty",
+      "precision": "3",
+      "reqd": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "wastage_percent",
+      "fieldtype": "Percent",
+      "label": "Wastage %",
+      "precision": "2"
+    },
+    {
+      "default": "0",
+      "fieldname": "total_budget_qty",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Total Budget Qty",
+      "precision": "3",
+      "read_only": 1
+    },
+    {
+      "collapsible": 1,
+      "fieldname": "section_tracking",
+      "fieldtype": "Section Break",
+      "label": "Lifecycle Tracking"
+    },
+    {
+      "default": "0",
+      "fieldname": "requested_qty",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Requested Qty (PR)",
+      "precision": "3",
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "ordered_qty",
+      "fieldtype": "Float",
+      "label": "Ordered Qty (PO)",
+      "precision": "3",
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "received_qty",
+      "fieldtype": "Float",
+      "label": "Received Qty (GRN)",
+      "precision": "3",
+      "read_only": 1
+    },
+    {
+      "fieldname": "column_break_2",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "executed_qty",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Executed Qty (WIP)",
+      "precision": "3",
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "balance_to_order",
+      "fieldtype": "Float",
+      "label": "Balance to Order",
+      "precision": "3",
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "balance_to_execute",
+      "fieldtype": "Float",
+      "label": "Balance to Execute",
+      "precision": "3",
+      "read_only": 1
+    }
+  ],
+  "istable": 1,
+  "links": [],
+  "modified": "2026-09-12 18:40:00.000000",
+  "modified_by": "Administrator",
+  "module": "AMP",
+  "name": "Drawing BOQ Item",
+  "owner": "Administrator",
+  "permissions": [],
+  "quick_entry": 1,
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

@@ -1,0 +1,164 @@
+{
+  "actions": [],
+  "autoname": "format:{drawing}-{revision_no}",
+  "creation": "2026-09-12 18:40:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "drawing",
+    "revision_no",
+    "issue_date",
+    "revision_status",
+    "column_break_1",
+    "drawing_file",
+    "approved_by",
+    "approval_date",
+    "section_notes",
+    "revision_notes",
+    "section_boq",
+    "items",
+    "section_totals",
+    "total_items_count"
+  ],
+  "fields": [
+    {
+      "fieldname": "drawing",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Project Drawing",
+      "options": "Project Drawing",
+      "reqd": 1
+    },
+    {
+      "fieldname": "revision_no",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Revision No",
+      "reqd": 1
+    },
+    {
+      "default": "Today",
+      "fieldname": "issue_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Issue Date",
+      "reqd": 1
+    },
+    {
+      "default": "Draft",
+      "fieldname": "revision_status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Revision Status",
+      "options": "Draft\nUnder Review\nApproved - GFC\nSuperseded",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "drawing_file",
+      "fieldtype": "Attach",
+      "label": "Drawing File (PDF/CAD)"
+    },
+    {
+      "fieldname": "approved_by",
+      "fieldtype": "Link",
+      "label": "Approved By",
+      "options": "User"
+    },
+    {
+      "fieldname": "approval_date",
+      "fieldtype": "Date",
+      "label": "Approval Date"
+    },
+    {
+      "fieldname": "section_notes",
+      "fieldtype": "Section Break",
+      "label": "Revision Description & Reason for Change"
+    },
+    {
+      "fieldname": "revision_notes",
+      "fieldtype": "Small Text",
+      "label": "Revision Notes"
+    },
+    {
+      "fieldname": "section_boq",
+      "fieldtype": "Section Break",
+      "label": "Drawing Bill of Quantities (BOQ / BOM Impact)"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "BOQ Items",
+      "options": "Drawing BOQ Item"
+    },
+    {
+      "fieldname": "section_totals",
+      "fieldtype": "Section Break",
+      "label": "Totals"
+    },
+    {
+      "default": "0",
+      "fieldname": "total_items_count",
+      "fieldtype": "Int",
+      "label": "Total Items Count",
+      "read_only": 1
+    }
+  ],
+  "links": [],
+  "modified": "2026-09-12 18:40:00.000000",
+  "modified_by": "Administrator",
+  "module": "AMP",
+  "name": "Drawing Revision",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Projects Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 0,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Projects User",
+      "share": 0,
+      "write": 0
+    }
+  ],
+  "quick_entry": 1,
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "revision_no",
+  "track_changes": 1
+}

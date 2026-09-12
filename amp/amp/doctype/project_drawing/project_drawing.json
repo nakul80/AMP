@@ -1,0 +1,207 @@
+{
+  "actions": [],
+  "autoname": "field:drawing_no",
+  "creation": "2026-09-12 18:40:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "drawing_no",
+    "drawing_title",
+    "project",
+    "discipline",
+    "column_break_1",
+    "main_area",
+    "sub_area",
+    "current_revision",
+    "status",
+    "section_file",
+    "drawing_file",
+    "designer_consultant",
+    "column_break_2",
+    "release_date",
+    "percent_progress",
+    "section_boq",
+    "boq_items"
+  ],
+  "fields": [
+    {
+      "fieldname": "drawing_no",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Drawing No",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "drawing_title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Drawing Title",
+      "reqd": 1
+    },
+    {
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Project",
+      "options": "Project",
+      "reqd": 1
+    },
+    {
+      "fieldname": "discipline",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Discipline",
+      "options": "Excavation\nCivil\nStructural\nPiping\nDucting\nRailings & Secondary Structural\nOther",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "main_area",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Main Area",
+      "options": "Project Main Area",
+      "reqd": 1
+    },
+    {
+      "fieldname": "sub_area",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Sub Area",
+      "options": "Project Sub Area"
+    },
+    {
+      "default": "Rev 0",
+      "fieldname": "current_revision",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Current Revision",
+      "read_only": 1
+    },
+    {
+      "default": "Draft",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Draft\nIssued For Review\nGood For Construction (GFC)\nSuperseded\nAs-Built",
+      "reqd": 1
+    },
+    {
+      "fieldname": "section_file",
+      "fieldtype": "Section Break",
+      "label": "File & Consultant Details"
+    },
+    {
+      "fieldname": "drawing_file",
+      "fieldtype": "Attach",
+      "label": "Latest Drawing File (PDF/CAD)"
+    },
+    {
+      "fieldname": "designer_consultant",
+      "fieldtype": "Data",
+      "label": "Designer / Consultant"
+    },
+    {
+      "fieldname": "column_break_2",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "release_date",
+      "fieldtype": "Date",
+      "label": "Release Date"
+    },
+    {
+      "default": "0",
+      "fieldname": "percent_progress",
+      "fieldtype": "Percent",
+      "label": "% Executed Progress",
+      "precision": "2",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_boq",
+      "fieldtype": "Section Break",
+      "label": "Active Bill of Quantities (BOM / BOQ)"
+    },
+    {
+      "fieldname": "boq_items",
+      "fieldtype": "Table",
+      "label": "BOQ Items",
+      "options": "Drawing BOQ Item"
+    }
+  ],
+  "links": [
+    {
+      "group": "Revisions",
+      "link_doctype": "Drawing Revision",
+      "link_fieldname": "drawing"
+    },
+    {
+      "group": "Site Progress",
+      "link_doctype": "Daily Progress Item",
+      "link_fieldname": "drawing"
+    }
+  ],
+  "modified": "2026-09-12 18:40:00.000000",
+  "modified_by": "Administrator",
+  "module": "AMP",
+  "name": "Project Drawing",
+  "naming_rule": "By fieldname",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Projects Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 0,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Projects User",
+      "share": 0,
+      "write": 0
+    }
+  ],
+  "quick_entry": 1,
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "drawing_title",
+  "track_changes": 1
+}
