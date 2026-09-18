@@ -1,6 +1,6 @@
 {
   "charts": [],
-  "content": "[{\"id\":\"hdr_shortcuts\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"sc_drawings\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Drawings Register\",\"col\":3}},{\"id\":\"sc_progress\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quick Site Progress Entry\",\"col\":3}},{\"id\":\"sc_dpr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Daily Progress Reports\",\"col\":3}},{\"id\":\"sc_pr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Requests (PR)\",\"col\":3}},{\"id\":\"spacer_1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"hdr_masters\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Project Management & Site Execution</b></span>\",\"col\":12}},{\"id\":\"card_drawings\",\"type\":\"card\",\"data\":{\"card_name\":\"Drawings & Revisions\",\"col\":4}},{\"id\":\"card_progress\",\"type\":\"card\",\"data\":{\"card_name\":\"Site Execution & Daily Progress\",\"col\":4}},{\"id\":\"card_procurement\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement & Stock\",\"col\":4}}]",
+  "content": "[{\"id\": \"hdr_shortcuts\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\", \"col\": 12}}, {\"id\": \"sc_drawings\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Drawings Register\", \"col\": 3}}, {\"id\": \"sc_progress\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Quick Site Progress Entry\", \"col\": 3}}, {\"id\": \"sc_dpr\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Daily Progress Reports\", \"col\": 3}}, {\"id\": \"sc_pr\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Material Requests (PR)\", \"col\": 3}}, {\"id\": \"spacer_1\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"id\": \"hdr_masters\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Project Management & Site Execution</b></span>\", \"col\": 12}}, {\"id\": \"card_drawings\", \"type\": \"card\", \"data\": {\"card_name\": \"Drawings & Revisions\", \"col\": 4}}, {\"id\": \"card_progress\", \"type\": \"card\", \"data\": {\"card_name\": \"Site Execution & Daily Progress\", \"col\": 4}}, {\"id\": \"card_procurement\", \"type\": \"card\", \"data\": {\"card_name\": \"Procurement & Stock\", \"col\": 4}}, {\"id\": \"project_progress_summary\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Project Progress Summary\", \"col\": 6}}, {\"id\": \"project_material_status\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Project Material Status\", \"col\": 6}}, {\"id\": \"amp_reports\", \"type\": \"card\", \"data\": {\"card_name\": \"AMP Reports\", \"col\": 12}}]",
   "creation": "2026-09-12 18:40:00.000000",
   "custom_blocks": [],
   "docstatus": 0,
@@ -116,6 +116,25 @@
       "link_to": "Stock Entry",
       "link_type": "DocType",
       "type": "Link"
+    },
+    {
+      "type": "Card Break",
+      "label": "AMP Reports",
+      "link_count": 2
+    },
+    {
+      "type": "Link",
+      "label": "Project Progress Summary",
+      "link_to": "Project Progress Summary",
+      "link_type": "Report",
+      "is_query_report": 1
+    },
+    {
+      "type": "Link",
+      "label": "Project Material Status",
+      "link_to": "Project Material Status",
+      "link_type": "Report",
+      "is_query_report": 1
     }
   ],
   "modified": "2026-09-12 18:40:00.000000",
@@ -156,6 +175,20 @@
       "label": "Material Requests (PR)",
       "link_to": "Material Request",
       "type": "DocType"
+    },
+    {
+      "label": "Project Progress Summary",
+      "link_to": "Project Progress Summary",
+      "type": "Report",
+      "color": "Blue",
+      "doc_view": ""
+    },
+    {
+      "label": "Project Material Status",
+      "link_to": "Project Material Status",
+      "type": "Report",
+      "color": "Orange",
+      "doc_view": ""
     }
   ],
   "title": "AMP"

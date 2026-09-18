@@ -37,13 +37,21 @@ frappe.ui.form.on('Daily Progress Report', {
 	},
 
 	refresh: function(frm) {
+		frm.add_custom_button(__('Project Progress'), () => {
+			frappe.route_options = {project: frm.doc.project};
+			frappe.set_route('query-report', 'Project Progress Summary');
+		}, __('Reports'));
+		frm.add_custom_button(__('All DPRs'), () => {
+			frappe.route_options = {project: frm.doc.project};
+			frappe.set_route('List', 'Daily Progress Report', 'List');
+		});
 		if (frm.doc.docstatus === 1 && frm.doc.stock_entry) {
 			frm.add_custom_button(__('View Stock Entry'), function() {
 				frappe.set_route('Form', 'Stock Entry', frm.doc.stock_entry);
 			}, __('Inventory'));
 		}
 
-		if (frm.doc.docstatus === 0 && !frm.is_new()) {
+		if (frm.doc.docstatus === 0) {
 			frm.add_custom_button(__('Fetch Open Drawing Tasks'), function() {
 				if (!frm.doc.project || !frm.doc.main_area) {
 					frappe.msgprint(__('Please select Project and Main Area first.'));
@@ -64,11 +72,16 @@ frappe.ui.form.on('Daily Progress Report', {
 								let row = frm.add_child('progress_items');
 								row.drawing = item.drawing;
 								row.boq_item = item.item_code;
+								row.boq_line_id = item.boq_line_id;
 								row.activity_description = item.description || item.item_name;
 								row.uom = item.uom;
 								row.drawing_budget_qty = item.total_budget_qty;
 								row.previously_executed_qty = item.executed_qty;
 								row.today_executed_qty = 0;
+								row.previously_fabricated_qty = item.fabricated_qty || 0;
+								row.previously_erected_qty = item.erected_qty || 0;
+								row.today_fabricated_qty = 0;
+								row.today_erected_qty = 0;
 								row.cumulative_executed_qty = item.executed_qty;
 								row.balance_qty = item.balance_to_execute;
 							});
@@ -91,10 +104,13 @@ frappe.ui.form.on('Daily Progress Item', {
 			frappe.db.get_doc('Project Drawing', row.drawing).then(dwg => {
 				if (dwg.boq_items && dwg.boq_items.length === 1) {
 					let b = dwg.boq_items[0];
+					frappe.model.set_value(cdt, cdn, 'boq_line_id', b.boq_line_id);
 					frappe.model.set_value(cdt, cdn, 'boq_item', b.item_code);
 					frappe.model.set_value(cdt, cdn, 'uom', b.uom);
-					frappe.model.set_value(cdt, cdn, 'drawing_budget_qty', b.total_budget_qty);
+					frappe.model.set_value(cdt, cdn, 'drawing_budget_qty', b.estimated_qty);
 					frappe.model.set_value(cdt, cdn, 'previously_executed_qty', b.executed_qty);
+					frappe.model.set_value(cdt, cdn, 'previously_fabricated_qty', b.fabricated_qty || 0);
+					frappe.model.set_value(cdt, cdn, 'previously_erected_qty', b.erected_qty || 0);
 					frappe.model.set_value(cdt, cdn, 'balance_qty', b.balance_to_execute);
 				}
 			});
@@ -112,4 +128,19 @@ frappe.ui.form.on('Daily Progress Item', {
 			frappe.model.set_value(cdt, cdn, 'balance_qty', Math.max(0, budget - cumulative));
 		}
 	}
+	,
+	today_fabricated_qty: function(frm, cdt, cdn) {
+		refresh_structural_progress(frm, cdt, cdn);
+	},
+	today_erected_qty: function(frm, cdt, cdn) {
+		refresh_structural_progress(frm, cdt, cdn);
+	}
 });
+
+function refresh_structural_progress(frm, cdt, cdn) {
+	let row = locals[cdt][cdn];
+	let fabricated = flt(row.previously_fabricated_qty || 0) + flt(row.today_fabricated_qty || 0);
+	let erected = flt(row.previously_erected_qty || 0) + flt(row.today_erected_qty || 0);
+	frappe.model.set_value(cdt, cdn, 'cumulative_fabricated_qty', fabricated);
+	frappe.model.set_value(cdt, cdn, 'cumulative_erected_qty', erected);
+}

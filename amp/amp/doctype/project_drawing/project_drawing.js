@@ -32,6 +32,8 @@ frappe.ui.form.on('Project Drawing', {
 					// Pre-copy existing BOQ items to the new revision for easy incremental editing
 					(frm.doc.boq_items || []).forEach(item => {
 						let row = frappe.model.add_child(new_rev, 'items');
+						row.boq_line_id = item.boq_line_id;
+						row.progress_weight = item.progress_weight;
 						row.item_code = item.item_code;
 						row.item_name = item.item_name;
 						row.discipline = item.discipline;
@@ -75,6 +77,13 @@ frappe.ui.form.on('Project Drawing', {
 });
 
 frappe.ui.form.on('Drawing BOQ Item', {
+	discipline: function(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		if (row.discipline === 'Structural' && !flt(row.fabrication_progress_weight) && !flt(row.erection_progress_weight)) {
+			frappe.model.set_value(cdt, cdn, 'fabrication_progress_weight', 50);
+			frappe.model.set_value(cdt, cdn, 'erection_progress_weight', 50);
+		}
+	},
 	item_code: function(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
 		if (row.item_code) {
@@ -100,8 +109,8 @@ function recalculate_drawing_boq_row(frm, cdt, cdn) {
 	let wastage = flt(row.wastage_percent || 0);
 	let total = est * (1 + (wastage / 100));
 	frappe.model.set_value(cdt, cdn, 'total_budget_qty', total);
-	let req = flt(row.requested_qty || 0);
+	let req = flt(row.requested_qty || 0) + flt(row.draft_requested_qty || 0);
 	frappe.model.set_value(cdt, cdn, 'balance_to_order', Math.max(0, total - req));
 	let exec = flt(row.executed_qty || 0);
-	frappe.model.set_value(cdt, cdn, 'balance_to_execute', Math.max(0, total - exec));
+	frappe.model.set_value(cdt, cdn, 'balance_to_execute', Math.max(0, est - exec));
 }

@@ -17,7 +17,17 @@
     "column_break_2",
     "cumulative_executed_qty",
     "balance_qty",
-    "remarks"
+    "remarks",
+    "boq_line_id",
+    "drawing_revision",
+    "section_structural_progress",
+    "previously_fabricated_qty",
+    "today_fabricated_qty",
+    "cumulative_fabricated_qty",
+    "previously_erected_qty",
+    "today_erected_qty",
+    "cumulative_erected_qty",
+    "is_structural_stage_progress"
   ],
   "fields": [
     {
@@ -83,8 +93,7 @@
       "fieldtype": "Float",
       "in_list_view": 1,
       "label": "Today Executed Qty",
-      "precision": "3",
-      "reqd": 1
+      "precision": "3"
     },
     {
       "fieldname": "column_break_2",
@@ -111,6 +120,75 @@
       "fieldname": "remarks",
       "fieldtype": "Small Text",
       "label": "Remarks"
+    },
+    {
+      "fieldname": "boq_line_id",
+      "label": "BOQ Line Reference",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "drawing_revision",
+      "label": "Drawing Revision",
+      "fieldtype": "Link",
+      "options": "Drawing Revision",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_structural_progress",
+      "fieldtype": "Section Break",
+      "label": "Structural Fabrication & Erection",
+      "depends_on": "eval:doc.boq_line_id"
+    },
+    {
+      "fieldname": "previously_fabricated_qty",
+      "fieldtype": "Float",
+      "label": "Previously Fabricated",
+      "read_only": 1,
+      "default": "0"
+    },
+    {
+      "fieldname": "today_fabricated_qty",
+      "fieldtype": "Float",
+      "label": "Today Fabricated Qty",
+      "default": "0",
+      "precision": "3"
+    },
+    {
+      "fieldname": "cumulative_fabricated_qty",
+      "fieldtype": "Float",
+      "label": "Cumulative Fabricated",
+      "read_only": 1,
+      "default": "0"
+    },
+    {
+      "fieldname": "previously_erected_qty",
+      "fieldtype": "Float",
+      "label": "Previously Erected",
+      "read_only": 1,
+      "default": "0"
+    },
+    {
+      "fieldname": "today_erected_qty",
+      "fieldtype": "Float",
+      "label": "Today Erected Qty",
+      "default": "0",
+      "precision": "3"
+    },
+    {
+      "fieldname": "cumulative_erected_qty",
+      "fieldtype": "Float",
+      "label": "Cumulative Erected",
+      "read_only": 1,
+      "default": "0"
+    },
+    {
+      "fieldname": "is_structural_stage_progress",
+      "fieldtype": "Check",
+      "label": "Structural Stage Progress",
+      "read_only": 1,
+      "hidden": 1,
+      "default": "0"
     }
   ],
   "istable": 1,

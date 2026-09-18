@@ -15,16 +15,20 @@ def compare_revisions(rev_1, rev_2):
 
 	doc1 = frappe.get_doc("Drawing Revision", rev_1)
 	doc2 = frappe.get_doc("Drawing Revision", rev_2)
+	doc1.check_permission("read")
+	doc2.check_permission("read")
+	if doc1.drawing != doc2.drawing:
+		frappe.throw(_("Compare revisions of the same drawing."))
 
 	# Build lookup maps for items: key = (item_code, discipline)
 	map1 = {}
 	for item in (doc1.items or []):
-		key = (item.item_code, item.discipline or "")
+		key = (item.item_code, item.discipline or "", item.boq_line_id or item.name)
 		map1[key] = item
 
 	map2 = {}
 	for item in (doc2.items or []):
-		key = (item.item_code, item.discipline or "")
+		key = (item.item_code, item.discipline or "", item.boq_line_id or item.name)
 		map2[key] = item
 
 	all_keys = set(map1.keys()).union(set(map2.keys()))

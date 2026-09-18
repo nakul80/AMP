@@ -1,41 +1,23 @@
 app_name = "amp"
 app_title = "AMP"
 app_publisher = "PMG Team"
-app_description = "App for Managing Projects - Drawings, BOQs, Procurement Indents & Daily Progress Reports with WIP Stock Integration"
+app_description = "Construction drawings, procurement and site progress"
 app_email = "info@example.com"
 app_license = "mit"
-
-# Includes in <head>
-# ------------------
-
-# include js, css files in header of desk.html
-# app_include_css = "/assets/amp/css/amp.css"
-# app_include_js = "/assets/amp/js/amp.js"
-
-# Document Events
-# ---------------
-# Hook on document methods and events
+required_apps = ["erpnext"]
+after_install = "amp.setup.install"
+after_migrate = "amp.setup.install"
+doctype_js = {"Project": "public/js/project.js"}
 
 doc_events = {
-	"Daily Progress Report": {
-		"on_submit": "amp.amp.doctype.daily_progress_report.daily_progress_report.on_dpr_submit",
-		"on_cancel": "amp.amp.doctype.daily_progress_report.daily_progress_report.on_dpr_cancel"
-	}
+    doctype: {
+        "validate": "amp.amp.transactions.validate_transaction",
+        "on_update": "amp.amp.transactions.transaction_changed",
+        "on_submit": "amp.amp.transactions.transaction_changed",
+        "on_cancel": "amp.amp.transactions.transaction_changed",
+        "on_update_after_submit": "amp.amp.transactions.transaction_changed",
+        "after_delete": "amp.amp.transactions.transaction_changed",
+    }
+    for doctype in ("Material Request", "Purchase Order", "Purchase Receipt", "Stock Entry")
 }
-
-# Desk Notifications
-# ------------------
-# See frappe.core.notifications.get_notification_config
-
-# Permissions
-# -----------
-# Permissions evaluated in scripted ways
-
-# Scheduled Tasks
-# ---------------
-
-# scheduler_events = {
-# 	"daily": [
-# 		"amp.amp.tasks.daily"
-# 	],
-# }
+doc_events["Project"] = {"validate": "amp.amp.project.validate_project"}

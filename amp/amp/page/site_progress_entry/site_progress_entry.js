@@ -24,6 +24,8 @@ class SiteProgressEntry {
 	constructor(page) {
 		this.page = page;
 		this.tasks = [];
+		this.load_sequence = 0;
+		this.drawing_filter = null;
 		this.init_ui();
 	}
 
@@ -31,13 +33,18 @@ class SiteProgressEntry {
 		let me = this;
 
 		// Primary Action: Submit
-		this.page.set_primary_action(__('Submit Progress (DPR + Stock)'), function() {
+		this.page.set_primary_action(__('Submit Progress'), function() {
 			me.submit_batch_progress();
 		}, 'octicon octicon-check');
 
 		// Secondary Action: Refresh
 		this.page.add_button(__('Load Open Tasks'), function() {
 			me.load_tasks();
+		});
+
+		this.page.add_button(__('Project Progress Report'), () => {
+			frappe.route_options = {project: this.project_field.get_value()};
+			frappe.set_route('query-report', 'Project Progress Summary');
 		});
 
 		// Build filter container
@@ -68,6 +75,7 @@ class SiteProgressEntry {
 		`;
 
 		this.page.main.html(filter_html);
+		this.page.main.find('.site-progress-table-card').prepend($('<p class="text-muted p-3">').text(__('Material Used is optional and independent of work executed. Stock posting requires a warehouse and Stock Entry permissions.')));
 		this.setup_fields();
 	}
 
@@ -82,7 +90,11 @@ class SiteProgressEntry {
 				fieldname: 'project',
 				reqd: 1,
 				change: function() {
-					me.main_area_field.set_input('');
+					me.drawing_filter = null;
+						me.load_sequence++;
+						me.tasks = [];
+						me.render_grid();
+						me.main_area_field.set_input('');
 					me.sub_area_field.set_input('');
 				}
 			},
@@ -190,6 +202,7 @@ class SiteProgressEntry {
 		if (params.project) this.project_field.set_input(params.project);
 		if (params.main_area) this.main_area_field.set_input(params.main_area);
 		if (params.sub_area) this.sub_area_field.set_input(params.sub_area);
+		this.drawing_filter = params.drawing || null;
 		this.load_tasks();
 	}
 
@@ -204,14 +217,17 @@ class SiteProgressEntry {
 			return;
 		}
 
+		const sequence = ++this.load_sequence;
 		frappe.call({
 			method: 'amp.amp.api.progress.get_pending_drawing_items',
 			args: {
 				project: project,
 				main_area: main_area,
-				sub_area: sub_area
+				sub_area: sub_area,
+				drawing: this.drawing_filter
 			},
 			callback: function(r) {
+				if (sequence !== me.load_sequence) return;
 				me.tasks = r.message || [];
 				me.render_grid();
 			}
@@ -234,7 +250,14 @@ class SiteProgressEntry {
 
 		let rows_html = this.tasks.map((task, idx) => {
 			let pct = task.total_budget_qty > 0 ? ((task.executed_qty / task.total_budget_qty) * 100).toFixed(1) : 0;
-			let disc_class = `discipline-${task.discipline || 'Other'}`;
+			let disc_class = `discipline-${(task.discipline || 'Other').replace(/[^a-zA-Z0-9_-]/g, '-')}`;
+
+			let work_entry = task.is_structural
+				? `<td class="text-center text-muted">—</td>
+					<td class="text-center"><input type="number" step="any" min="0" class="site-input-progress site-input-fabrication" data-idx="${idx}" placeholder="0.00" tabindex="${idx + 1}" /></td>
+					<td class="text-center"><input type="number" step="any" min="0" class="site-input-progress site-input-erection" data-idx="${idx}" placeholder="0.00" tabindex="${idx + 1}" /></td>`
+				: `<td class="text-center"><input type="number" step="any" min="0" class="site-input-progress site-input-qty" data-idx="${idx}" placeholder="0.00" tabindex="${idx + 1}" /></td>
+					<td class="text-center text-muted">—</td><td class="text-center text-muted">—</td>`;
 
 			return `
 				<tr data-idx="${idx}">
@@ -252,13 +275,8 @@ class SiteProgressEntry {
 					<td><span class="badge badge-light">${frappe.utils.escape_html(task.uom)}</span></td>
 					<td class="text-right font-weight-500">${task.total_budget_qty.toFixed(2)}</td>
 					<td class="text-right text-muted">${task.executed_qty.toFixed(2)}</td>
-					<td class="text-center">
-						<input type="number" step="any" min="0" 
-							class="site-input-qty" 
-							data-idx="${idx}" 
-							placeholder="0.00" 
-							tabindex="${idx + 1}" />
-					</td>
+					${work_entry}
+					<td><input type="number" step="any" min="0" class="site-input-material" data-idx="${idx}" placeholder="Optional" ${task.is_stock_item ? "" : "disabled"} /></td>
 					<td class="text-nowrap" id="cell-progress-${idx}">
 						<div class="progress-bar-container">
 							<div class="progress-bar-fill" id="progress-fill-${idx}" style="width: ${Math.min(100, pct)}%"></div>
@@ -286,6 +304,9 @@ class SiteProgressEntry {
 						<th class="text-right">Budget Qty</th>
 						<th class="text-right">Prev Done</th>
 						<th class="text-center" style="background-color: #ecfdf5; color: #047857;">Today's Executed Qty</th>
+						<th class="text-center" style="background-color: #eff6ff; color: #1d4ed8;">Today Fabricated Qty</th>
+						<th class="text-center" style="background-color: #fef3c7; color: #92400e;">Today Erected Qty</th>
+						<th>Material Used (same UOM)</th>
 						<th>Cumulative Progress</th>
 						<th>Location / Grid</th>
 						<th>Remarks</th>
@@ -300,10 +321,15 @@ class SiteProgressEntry {
 		container.html(table_html);
 
 		// Event listeners for Excel-like rapid entry
-		container.find('.site-input-qty').on('input', function() {
+		container.find('.site-input-progress').on('input', function() {
 			let idx = parseInt($(this).data('idx'));
-			let val = flt($(this).val() || 0);
 			let task = me.tasks[idx];
+			let direct = flt(container.find(`.site-input-qty[data-idx="${idx}"]`).val() || 0);
+			let fabricated = flt(container.find(`.site-input-fabrication[data-idx="${idx}"]`).val() || 0);
+			let erected = flt(container.find(`.site-input-erection[data-idx="${idx}"]`).val() || 0);
+			let val = task.is_structural
+				? fabricated * flt(task.fabrication_progress_weight || 0) / 100 + erected * flt(task.erection_progress_weight || 0) / 100
+				: direct;
 
 			let cumulative = task.executed_qty + val;
 			let pct = task.total_budget_qty > 0 ? ((cumulative / task.total_budget_qty) * 100).toFixed(1) : 0;
@@ -318,15 +344,19 @@ class SiteProgressEntry {
 		});
 
 		// Arrow key down / up navigation (Excel navigation)
-		container.find('.site-input-qty').on('keydown', function(e) {
+		container.find('.site-input-progress').on('keydown', function(e) {
 			let idx = parseInt($(this).data('idx'));
 			if (e.key === 'ArrowDown' || e.key === 'Enter') {
 				e.preventDefault();
-				let next = container.find(`.site-input-qty[data-idx="${idx + 1}"]`);
+				let inputs = container.find('.site-input-progress');
+				let current = inputs.index(this);
+				let next = inputs.eq(current + 1);
 				if (next.length) next.focus().select();
 			} else if (e.key === 'ArrowUp') {
 				e.preventDefault();
-				let prev = container.find(`.site-input-qty[data-idx="${idx - 1}"]`);
+				let inputs = container.find('.site-input-progress');
+				let current = inputs.index(this);
+				let prev = inputs.eq(current - 1);
 				if (prev.length) prev.focus().select();
 			}
 		});
@@ -348,10 +378,11 @@ class SiteProgressEntry {
 		}
 
 		let items_to_log = [];
-		this.page.main.find('.site-input-qty').each(function() {
-			let qty = flt($(this).val() || 0);
-			if (qty > 0) {
-				let idx = parseInt($(this).data('idx'));
+		this.tasks.forEach((task, idx) => {
+			let qty = flt(me.page.main.find(`.site-input-qty[data-idx="${idx}"]`).val() || 0);
+			let fabricated = flt(me.page.main.find(`.site-input-fabrication[data-idx="${idx}"]`).val() || 0);
+			let erected = flt(me.page.main.find(`.site-input-erection[data-idx="${idx}"]`).val() || 0);
+			if (qty > 0 || fabricated > 0 || erected > 0) {
 				let task = me.tasks[idx];
 				let loc = me.page.main.find(`.site-input-loc[data-idx="${idx}"]`).val() || '';
 				let rem = me.page.main.find(`.site-input-rem[data-idx="${idx}"]`).val() || '';
@@ -359,12 +390,16 @@ class SiteProgressEntry {
 				items_to_log.push({
 					drawing: task.drawing,
 					item_code: task.item_code,
+					boq_line_id: task.boq_line_id,
+					material_qty: flt(me.page.main.find(`.site-input-material[data-idx="${idx}"]`).val() || 0),
 					item_name: task.item_name,
 					description: task.description,
 					uom: task.uom,
 					budget_qty: task.total_budget_qty,
 					prev_qty: task.executed_qty,
 					today_qty: qty,
+					fabricated_qty: fabricated,
+					erected_qty: erected,
 					location_grid: loc,
 					remarks: rem
 				});
@@ -372,11 +407,11 @@ class SiteProgressEntry {
 		});
 
 		if (items_to_log.length === 0) {
-			frappe.msgprint(__('Please enter Today\'s Executed Qty for at least one item.'));
+			frappe.msgprint(__('Enter executed, fabricated, or erected quantity for at least one item.'));
 			return;
 		}
 
-		frappe.confirm(__('Submit progress for {0} items? This will create a Daily Progress Report and update site stock/WIP.', [items_to_log.length]), function() {
+		frappe.confirm(__('Submit progress for {0} items? Entered material usage is posted to stock only when a source warehouse is selected.', [items_to_log.length]), function() {
 			frappe.call({
 				method: 'amp.amp.api.progress.submit_quick_progress',
 				args: {
@@ -406,7 +441,11 @@ class SiteProgressEntry {
 						frappe.msgprint({
 							title: __('Progress Saved'),
 							message: msg,
-							indicator: 'green'
+							indicator: 'green',
+							primary_action: {
+								label: __('View Submitted DPR'),
+								action() { frappe.set_route('Form', 'Daily Progress Report', r.message.dpr_name); }
+							}
 						});
 
 						// Reload tasks to reflect updated execution numbers

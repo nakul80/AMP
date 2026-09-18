@@ -59,6 +59,13 @@ frappe.ui.form.on('Drawing Revision', {
 });
 
 frappe.ui.form.on('Drawing BOQ Item', {
+	discipline: function(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		if (row.discipline === 'Structural' && !flt(row.fabrication_progress_weight) && !flt(row.erection_progress_weight)) {
+			frappe.model.set_value(cdt, cdn, 'fabrication_progress_weight', 50);
+			frappe.model.set_value(cdt, cdn, 'erection_progress_weight', 50);
+		}
+	},
 	estimated_qty: function(frm, cdt, cdn) {
 		calculate_boq_row(frm, cdt, cdn);
 	},
@@ -73,10 +80,10 @@ function calculate_boq_row(frm, cdt, cdn) {
 	let wastage = flt(row.wastage_percent || 0);
 	let total = est * (1 + (wastage / 100));
 	frappe.model.set_value(cdt, cdn, 'total_budget_qty', total);
-	let req = flt(row.requested_qty || 0);
+	let req = flt(row.requested_qty || 0) + flt(row.draft_requested_qty || 0);
 	frappe.model.set_value(cdt, cdn, 'balance_to_order', Math.max(0, total - req));
 	let executed = flt(row.executed_qty || 0);
-	frappe.model.set_value(cdt, cdn, 'balance_to_execute', Math.max(0, total - executed));
+	frappe.model.set_value(cdt, cdn, 'balance_to_execute', Math.max(0, est - executed));
 }
 
 function show_delta_dialog(delta) {

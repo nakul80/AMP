@@ -21,7 +21,18 @@
     "column_break_2",
     "executed_qty",
     "balance_to_order",
-    "balance_to_execute"
+    "balance_to_execute",
+    "boq_line_id",
+    "progress_weight",
+    "draft_requested_qty",
+    "section_structural_progress",
+    "fabrication_progress_weight",
+    "erection_progress_weight",
+    "fabricated_qty",
+    "erected_qty",
+    "fabrication_balance_qty",
+    "erection_balance_qty",
+    "legacy_executed_qty"
   ],
   "fields": [
     {
@@ -150,6 +161,88 @@
       "label": "Balance to Execute",
       "precision": "3",
       "read_only": 1
+    },
+    {
+      "fieldname": "boq_line_id",
+      "label": "BOQ Line Reference",
+      "fieldtype": "Data",
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "progress_weight",
+      "label": "Progress Weight",
+      "fieldtype": "Float",
+      "default": "1",
+      "description": "Relative work weight, independent of UOM. Default 1 gives each BOQ activity equal weight."
+    },
+    {
+      "fieldname": "draft_requested_qty",
+      "label": "Draft Requested Qty",
+      "fieldtype": "Float",
+      "read_only": 1,
+      "default": "0"
+    },
+    {
+      "fieldname": "section_structural_progress",
+      "fieldtype": "Section Break",
+      "label": "Structural Fabrication & Erection Progress",
+      "depends_on": "eval:doc.discipline=='Structural'"
+    },
+    {
+      "fieldname": "fabrication_progress_weight",
+      "fieldtype": "Percent",
+      "label": "Fabrication Progress Weight %",
+      "default": "50",
+      "depends_on": "eval:doc.discipline=='Structural'",
+      "description": "Share of this structural activity's completion earned by fabrication. Fabrication and erection weights must total 100%."
+    },
+    {
+      "fieldname": "erection_progress_weight",
+      "fieldtype": "Percent",
+      "label": "Erection Progress Weight %",
+      "default": "50",
+      "depends_on": "eval:doc.discipline=='Structural'"
+    },
+    {
+      "fieldname": "fabricated_qty",
+      "fieldtype": "Float",
+      "label": "Fabricated Qty",
+      "read_only": 1,
+      "default": "0",
+      "depends_on": "eval:doc.discipline=='Structural'"
+    },
+    {
+      "fieldname": "erected_qty",
+      "fieldtype": "Float",
+      "label": "Erected Qty",
+      "read_only": 1,
+      "default": "0",
+      "depends_on": "eval:doc.discipline=='Structural'"
+    },
+    {
+      "fieldname": "fabrication_balance_qty",
+      "fieldtype": "Float",
+      "label": "Fabrication Balance Qty",
+      "read_only": 1,
+      "default": "0",
+      "depends_on": "eval:doc.discipline=='Structural'"
+    },
+    {
+      "fieldname": "erection_balance_qty",
+      "fieldtype": "Float",
+      "label": "Erection Balance Qty",
+      "read_only": 1,
+      "default": "0",
+      "depends_on": "eval:doc.discipline=='Structural'"
+    },
+    {
+      "fieldname": "legacy_executed_qty",
+      "fieldtype": "Float",
+      "label": "Legacy Combined Executed Qty",
+      "read_only": 1,
+      "hidden": 1,
+      "default": "0"
     }
   ],
   "istable": 1,

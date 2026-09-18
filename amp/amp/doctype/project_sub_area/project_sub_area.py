@@ -8,5 +8,5 @@ class ProjectSubArea(Document):
 	def validate(self):
 		if self.sub_area_code:
 			self.sub_area_code = self.sub_area_code.strip().upper()
-		if self.main_area and not self.project:
+		if self.main_area:
 			self.project = frappe.db.get_value("Project Main Area", self.main_area, "project")

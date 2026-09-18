@@ -12,7 +12,9 @@
     "qty_consumed",
     "drawing",
     "batch_no",
-    "description"
+    "description",
+    "boq_line_id",
+    "drawing_revision"
   ],
   "fields": [
     {
@@ -70,6 +72,19 @@
       "fieldname": "description",
       "fieldtype": "Small Text",
       "label": "Remarks / Notes"
+    },
+    {
+      "fieldname": "boq_line_id",
+      "label": "BOQ Line Reference",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "drawing_revision",
+      "label": "Drawing Revision",
+      "fieldtype": "Link",
+      "options": "Drawing Revision",
+      "read_only": 1
     }
   ],
   "istable": 1,

@@ -169,7 +169,7 @@
       "label": "WIP & Material Consumption Integration"
     },
     {
-      "default": "1",
+      "default": "0",
       "fieldname": "auto_create_stock_entry",
       "fieldtype": "Check",
       "label": "Auto-Create ERPNext Stock Entry on Submit"
@@ -220,7 +220,7 @@
     {
       "group": "Inventory",
       "link_doctype": "Stock Entry",
-      "link_fieldname": "daily_progress_report"
+      "link_fieldname": "custom_daily_progress_report"
     }
   ],
   "modified": "2026-09-12 18:40:00.000000",
