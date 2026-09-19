@@ -1,3 +1,6 @@
+[pre_model_sync]
+
+[post_model_sync]
 amp.amp.patches.v0_0_1.sync_workspace
 amp.amp.patches.v0_0_2.reporting_and_references
 amp.amp.patches.v0_0_3.structural_progress
