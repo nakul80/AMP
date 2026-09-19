@@ -35,6 +35,8 @@ frappe.query_reports["Project Material Status"] = {
                 }
                 return {filters};
             }},
+        {fieldname: 'discipline', label: __('Discipline (optional)'), fieldtype: 'Select',
+            options: '\nCivil\nStructural\nExcavation\nPiping\nDucting\nElectrical\nInstrumentation\nOther'},
         {fieldname: 'item_code', label: __('Item'), fieldtype: 'Link', options: 'Item'},
         {fieldname: 'to_date', label: __('To Date'), fieldtype: 'Date', default: frappe.datetime.get_today(), reqd: 1},
         {fieldname: 'show_transactions', label: __('Show Transactions'), fieldtype: 'Check', default: 1}

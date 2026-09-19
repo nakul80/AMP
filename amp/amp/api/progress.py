@@ -6,7 +6,7 @@ from amp.amp.quantities import number
 
 
 @frappe.whitelist()
-def get_pending_drawing_items(project, main_area=None, sub_area=None, drawing=None):
+def get_pending_drawing_items(project, main_area=None, sub_area=None, drawing=None, discipline=None):
     if not project:
         return []
     validate_location(project, main_area, sub_area)
@@ -20,6 +20,9 @@ def get_pending_drawing_items(project, main_area=None, sub_area=None, drawing=No
         totals = drawing_totals(doc)
         stages = drawing_stage_totals(doc)
         for row in doc.boq_items or []:
+            row_discipline = row.discipline or doc.discipline
+            if discipline and row_discipline != discipline:
+                continue
             executed = totals.get(row.boq_line_id, 0)
             budget = number(row.estimated_qty)
             stage = stages.get(row.boq_line_id, {})
@@ -27,7 +30,7 @@ def get_pending_drawing_items(project, main_area=None, sub_area=None, drawing=No
             if executed >= budget and (not is_structural or stage.get("erected", 0) >= budget):
                 continue
             results.append(dict(drawing=name, drawing_no=doc.drawing_no, drawing_title=doc.drawing_title,
-                discipline=row.discipline or doc.discipline, main_area=doc.main_area, sub_area=doc.sub_area,
+                discipline=row_discipline, main_area=doc.main_area, sub_area=doc.sub_area,
                 revision=doc.current_revision, boq_line_id=row.boq_line_id, item_code=row.item_code,
                 item_name=row.item_name, description=row.description, uom=row.uom,
                 total_budget_qty=budget, executed_qty=executed, balance_to_execute=max(0, budget-executed),
@@ -60,7 +63,7 @@ def submit_quick_progress(payload):
     for item in valid:
         dpr.append("progress_items", dict(drawing=item.get("drawing"), boq_item=item.get("item_code"),
             boq_line_id=item.get("boq_line_id"), activity_description=item.get("description") or item.get("item_name"),
-            uom=item.get("uom"), location_grid=item.get("location_grid"),
+            discipline=item.get("discipline"), uom=item.get("uom"), location_grid=item.get("location_grid"),
             today_executed_qty=number(item.get("today_qty")),
             today_fabricated_qty=number(item.get("fabricated_qty")),
             today_erected_qty=number(item.get("erected_qty")), remarks=item.get("remarks")))

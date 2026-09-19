@@ -37,6 +37,7 @@ class DailyProgressReport(Document):
             )):
                 frappe.throw(_("Executed quantities cannot be negative."))
             row.boq_line_id = line.boq_line_id
+            row.discipline = line.discipline or drawing.discipline
             row.drawing_revision = frappe.db.get_value("Drawing Revision", {"drawing": drawing.name, "revision_status": "Approved - GFC"}, "name")
             row.uom = line.uom
             row.drawing_budget_qty = line.estimated_qty

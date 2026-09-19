@@ -30,7 +30,7 @@ def projects_and_drawings(filters):
         if filters.get(field):
             conditions["name" if field == "drawing" else field] = filters[field]
     drawings = frappe.get_list("Project Drawing", filters=conditions,
-        fields=["name", "drawing_title", "project", "main_area", "sub_area", "status"], limit_page_length=0)
+        fields=["name", "drawing_title", "project", "main_area", "sub_area", "discipline", "status"], limit_page_length=0)
     return projects, {d.name: d for d in drawings}
 
 

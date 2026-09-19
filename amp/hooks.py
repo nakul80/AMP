@@ -8,6 +8,7 @@ required_apps = ["erpnext"]
 after_install = "amp.setup.install"
 after_migrate = "amp.setup.install"
 doctype_js = {"Project": "public/js/project.js"}
+doctype_list_js = {"Daily Progress Report": "amp/doctype/daily_progress_report/daily_progress_report_list.js"}
 
 doc_events = {
     doctype: {

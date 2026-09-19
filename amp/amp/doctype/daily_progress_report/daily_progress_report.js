@@ -71,6 +71,7 @@ frappe.ui.form.on('Daily Progress Report', {
 							r.message.forEach(item => {
 								let row = frm.add_child('progress_items');
 								row.drawing = item.drawing;
+								row.discipline = item.discipline;
 								row.boq_item = item.item_code;
 								row.boq_line_id = item.boq_line_id;
 								row.activity_description = item.description || item.item_name;
@@ -105,6 +106,7 @@ frappe.ui.form.on('Daily Progress Item', {
 				if (dwg.boq_items && dwg.boq_items.length === 1) {
 					let b = dwg.boq_items[0];
 					frappe.model.set_value(cdt, cdn, 'boq_line_id', b.boq_line_id);
+					frappe.model.set_value(cdt, cdn, 'discipline', b.discipline || dwg.discipline || '');
 					frappe.model.set_value(cdt, cdn, 'boq_item', b.item_code);
 					frappe.model.set_value(cdt, cdn, 'uom', b.uom);
 					frappe.model.set_value(cdt, cdn, 'drawing_budget_qty', b.estimated_qty);

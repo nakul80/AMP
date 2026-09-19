@@ -23,7 +23,7 @@ def execute(filters=None):
             continue
         factor = stock_factor(row.item_code, row.uom)
         key = (drawing.project, row.parent, row.boq_line_id, row.item_code)
-        lines[key] = make_line(drawing.project, row.parent, row.boq_line_id, row.item_code, drawings)
+        lines[key] = make_line(drawing.project, row.parent, row.boq_line_id, row.item_code, drawings, row.discipline or drawing.discipline)
         lines[key]["budget_qty"] = number(row.total_budget_qty) * factor
         lines[key]["allocation"] = "Approved BOQ"
     for parenttype, childtype, datefield in TRANSACTIONS:
@@ -83,6 +83,8 @@ def execute(filters=None):
     for key, line in sorted(lines.items()):
         if filters.get("item_code") and line["item_code"] != filters.item_code:
             continue
+        if filters.get("discipline") and line.get("discipline") != filters.discipline:
+            continue
         allocated = line["allocation"] == "Approved BOQ"
         line["pending_request"] = max(0, line["budget_qty"] - line["requested_qty"] - line["draft_requested_qty"]) if allocated else None
         line["pending_order"] = max(0, line["requested_qty"] - line["ordered_qty"])
@@ -98,10 +100,10 @@ def execute(filters=None):
     return columns(), data, message, None, summary, True
 
 
-def make_line(project, drawing, line_id, item_code, drawings):
+def make_line(project, drawing, line_id, item_code, drawings, discipline=None):
     doc = drawings.get(drawing)
     return dict(project=project, drawing=drawing or "", boq_line_id=line_id or "", item_code=item_code,
-        main_area=doc.main_area if doc else None, sub_area=doc.sub_area if doc else None,
+        main_area=doc.main_area if doc else None, sub_area=doc.sub_area if doc else None, discipline=discipline or (doc.discipline if doc else None),
         uom=frappe.db.get_value("Item", item_code, "stock_uom"), budget_qty=0,
         allocation="Retired BOQ line" if line_id else "Unallocated", details=[], **{f: 0 for f in MEASURES})
 
@@ -109,7 +111,7 @@ def make_line(project, drawing, line_id, item_code, drawings):
 def columns():
     result = [column("project", "Project", "Link", "Project", 180),
         column("main_area", "Main Area", "Link", "Project Main Area"), column("sub_area", "Sub Area", "Link", "Project Sub Area"),
-        column("drawing", "Drawing", "Link", "Project Drawing"), column("item_code", "Item", "Link", "Item"), column("uom", "Stock UOM", "Link", "UOM", 90),
+        column("drawing", "Drawing", "Link", "Project Drawing"), column("discipline", "Discipline", "Data", width=110), column("item_code", "Item", "Link", "Item"), column("uom", "Stock UOM", "Link", "UOM", 90),
         column("budget_qty", "Material Budget")]
     result += [column(f, label) for f, label in zip(MEASURES, ("Draft Requests", "Requested", "Ordered", "Net Received", "Net WIP Transfers", "Stock Consumed", "DPR Reported Usage"))]
     result += [column("pending_request", "To Request"), column("pending_order", "To Order"), column("pending_receipt", "To Receive"), column("budget_variance", "Consumed Minus Budget"),

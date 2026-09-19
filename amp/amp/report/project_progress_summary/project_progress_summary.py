@@ -16,7 +16,7 @@ def execute(filters=None):
             continue
         lines[(row.parent, row.boq_line_id)] = dict(
             project=drawing.project, main_area=drawing.main_area, sub_area=drawing.sub_area,
-            drawing=drawing.name, item_code=row.item_code, uom=row.uom,
+            drawing=drawing.name, discipline=row.discipline or drawing.discipline, item_code=row.item_code, uom=row.uom,
             activity=row.description or row.item_name or row.item_code,
             boq_line_id=row.boq_line_id, budget_qty=number(row.estimated_qty),
             progress_weight=number(row.progress_weight), previous_qty=0, period_qty=0,
@@ -33,7 +33,7 @@ def execute(filters=None):
         key = (row.drawing, row.boq_line_id or f"unallocated:{row.boq_item}:{row.uom}")
         if key not in lines:
             lines[key] = dict(project=drawing.project, main_area=drawing.main_area, sub_area=drawing.sub_area,
-                drawing=row.drawing, item_code=row.boq_item, uom=row.uom, activity=row.activity_description or row.boq_item,
+                drawing=row.drawing, discipline=row.discipline or drawing.discipline, item_code=row.boq_item, uom=row.uom, activity=row.activity_description or row.boq_item,
                 boq_line_id=row.boq_line_id, budget_qty=0, progress_weight=0, previous_qty=0, period_qty=0,
                 is_structural=False, fabrication_progress_weight=0, erection_progress_weight=0,
                 previous_fabricated_qty=0, period_fabricated_qty=0,
@@ -78,19 +78,19 @@ def execute(filters=None):
     data = []
     project_rows = []
     for project in projects:
-        selected = [r for r in lines.values() if r["project"] == project.name]
-        if (filters.get("main_area") or filters.get("sub_area") or filters.get("drawing")) and not selected:
+        selected = [r for r in lines.values() if r["project"] == project.name and (not filters.get("discipline") or r.get("discipline") == filters.discipline)]
+        if (filters.get("main_area") or filters.get("sub_area") or filters.get("drawing") or filters.get("discipline")) and not selected:
             continue
         summary = dict(activity=project.project_name or project.name, project=project.name,
             indent=0, percent_progress=weighted_completion(selected), is_group=1)
         project_rows.append(summary)
         data.append(summary)
-        append_groups(data, selected, ("main_area", "sub_area", "drawing"), 1, filters.get("show_dprs"))
+        append_groups(data, selected, ("main_area", "sub_area", "discipline", "drawing"), 1, filters.get("show_dprs"))
     chart = dict(data=dict(labels=[r["activity"] for r in project_rows], datasets=[dict(name=_("Physical progress %"), values=[r["percent_progress"] for r in project_rows])]), type="bar")
     summary = [dict(label=_("Projects"), value=len(project_rows), datatype="Int"),
-        dict(label=_("Weighted physical progress"), value=weighted_completion(list(lines.values())), datatype="Percent", indicator="Blue"),
+        dict(label=_("Weighted physical progress"), value=weighted_completion([r for r in lines.values() if not filters.get("discipline") or r.get("discipline") == filters.discipline]), datatype="Percent", indicator="Blue"),
         dict(label=_("Lines needing reconciliation"), value=sum(r["allocation"] != "Approved BOQ" for r in lines.values()), datatype="Int", indicator="Orange")]
-    message = _("Submitted DPRs only. Dates filter execution; budgets use the CURRENT approved BOQ (not a historical baseline). Structural activities show Fabricated and Erected quantities separately and use their configured stage weights to calculate one physical completion value; the two quantities are never added together. Progress uses activity weights, default 1 per activity; quantities with different UOMs are never totalled. Retired/unallocated lines are displayed but excluded from weighted completion.")
+    message = _("Submitted DPRs only. Civil and Structural work are shown in separate discipline groups and can be filtered independently. Dates filter execution; budgets use the CURRENT approved BOQ (not a historical baseline). Structural activities show Fabricated and Erected quantities separately and use their configured stage weights to calculate one physical completion value; the two quantities are never added together. Progress uses activity weights, default 1 per activity; quantities with different UOMs are never totalled. Retired/unallocated lines are displayed but excluded from weighted completion.")
     return columns(), data, message, chart, summary, True
 
 
@@ -112,7 +112,7 @@ def append_groups(data, lines, fields, indent, show_dprs):
 
 def columns():
     return [column("activity", "Project / Area / Drawing / Activity", "Data", width=310),
-        column("project", "Project", "Link", "Project"), column("item_code", "Item", "Link", "Item"),
+        column("project", "Project", "Link", "Project"), column("discipline", "Discipline", "Data", width=110), column("item_code", "Item", "Link", "Item"),
         column("uom", "UOM", "Link", "UOM", 80), column("budget_qty", "Approved Work Qty"),
         column("previous_qty", "Before Period (Combined)"), column("period_qty", "During Period (Combined)"),
         column("previous_fabricated_qty", "Before Period Fabricated"), column("period_fabricated_qty", "During Period Fabricated"),

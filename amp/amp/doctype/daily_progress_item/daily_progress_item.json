@@ -6,6 +6,7 @@
   "engine": "InnoDB",
   "field_order": [
     "drawing",
+    "discipline",
     "boq_item",
     "activity_description",
     "location_grid",
@@ -37,6 +38,14 @@
       "label": "Drawing",
       "options": "Project Drawing",
       "reqd": 1
+    },
+    {
+      "fieldname": "discipline",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Discipline",
+      "options": "Civil\nStructural\nExcavation\nPiping\nDucting\nElectrical\nInstrumentation\nOther",
+      "read_only": 1
     },
     {
       "fieldname": "boq_item",

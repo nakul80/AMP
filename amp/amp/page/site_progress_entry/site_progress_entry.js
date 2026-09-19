@@ -389,6 +389,7 @@ class SiteProgressEntry {
 
 				items_to_log.push({
 					drawing: task.drawing,
+					discipline: task.discipline,
 					item_code: task.item_code,
 					boq_line_id: task.boq_line_id,
 					material_qty: flt(me.page.main.find(`.site-input-material[data-idx="${idx}"]`).val() || 0),

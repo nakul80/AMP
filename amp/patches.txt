@@ -4,3 +4,4 @@
 amp.amp.patches.v0_0_1.sync_workspace
 amp.amp.patches.v0_0_2.reporting_and_references
 amp.amp.patches.v0_0_3.structural_progress
+amp.amp.patches.v0_0_4.backfill_dpr_discipline
