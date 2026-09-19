@@ -51,13 +51,8 @@ def execute(filters=None):
         erection_field = "previous_erected_qty" if field == "previous_qty" else "period_erected_qty"
         line[fabrication_field] += number(row.today_fabricated_qty)
         line[erection_field] += number(row.today_erected_qty)
-        line["details"].append(dict(activity=row.parent, dpr=row.parent, posting_date=dpr.posting_date,
-            previous_qty=number(row.today_executed_qty) if field == "previous_qty" and not row.is_structural_stage_progress else 0,
-            period_qty=number(row.today_executed_qty) if field == "period_qty" and not row.is_structural_stage_progress else 0,
-            previous_fabricated_qty=number(row.today_fabricated_qty) if field == "previous_qty" else 0,
-            period_fabricated_qty=number(row.today_fabricated_qty) if field == "period_qty" else 0,
-            previous_erected_qty=number(row.today_erected_qty) if field == "previous_qty" else 0,
-            period_erected_qty=number(row.today_erected_qty) if field == "period_qty" else 0, uom=row.uom))
+        # One visible diary row per actual work stage makes the reported work unambiguous.
+        add_work_done_details(line, row, dpr)
     for line in lines.values():
         if line["is_structural"]:
             previous = structural_progress_values(
@@ -90,7 +85,7 @@ def execute(filters=None):
     summary = [dict(label=_("Projects"), value=len(project_rows), datatype="Int"),
         dict(label=_("Weighted physical progress"), value=weighted_completion([r for r in lines.values() if not filters.get("discipline") or r.get("discipline") == filters.discipline]), datatype="Percent", indicator="Blue"),
         dict(label=_("Lines needing reconciliation"), value=sum(r["allocation"] != "Approved BOQ" for r in lines.values()), datatype="Int", indicator="Orange")]
-    message = _("Submitted DPRs only. Civil and Structural work are shown in separate discipline groups and can be filtered independently. Dates filter execution; budgets use the CURRENT approved BOQ (not a historical baseline). Structural activities show Fabricated and Erected quantities separately and use their configured stage weights to calculate one physical completion value; the two quantities are never added together. Progress uses activity weights, default 1 per activity; quantities with different UOMs are never totalled. Retired/unallocated lines are displayed but excluded from weighted completion.")
+    message = _("This is a project summary. Expand an activity only when you need the DPR diary rows: each row states whether the work done was Execution, Fabrication, or Erection and its recorded quantity. Civil and Structural work are shown in separate discipline groups and can be filtered independently. Structural completion uses the configured stage weights; fabricated and erected quantities are never added together.")
     return columns(), data, message, chart, summary, True
 
 
@@ -110,18 +105,29 @@ def append_groups(data, lines, fields, indent, show_dprs):
                     data.append(detail | dict(indent=indent+1))
 
 
+def add_work_done_details(line, row, dpr):
+    base = dict(dpr=row.parent, posting_date=dpr.posting_date, uom=row.uom, remarks=row.remarks or "")
+    stages = (
+        (_("Execution"), number(row.today_executed_qty), not row.is_structural_stage_progress),
+        (_("Fabrication"), number(row.today_fabricated_qty), True),
+        (_("Erection"), number(row.today_erected_qty), True),
+    )
+    for work_done, quantity, applicable in stages:
+        if applicable and quantity:
+            line["details"].append(base | dict(
+                activity=_('{0} — {1}').format(row.parent, work_done),
+                work_done=work_done, reported_qty=quantity,
+            ))
+
+
 def columns():
     return [column("activity", "Project / Area / Drawing / Activity", "Data", width=310),
-        column("project", "Project", "Link", "Project"), column("discipline", "Discipline", "Data", width=110), column("item_code", "Item", "Link", "Item"),
-        column("uom", "UOM", "Link", "UOM", 80), column("budget_qty", "Approved Work Qty"),
-        column("previous_qty", "Before Period (Combined)"), column("period_qty", "During Period (Combined)"),
-        column("previous_fabricated_qty", "Before Period Fabricated"), column("period_fabricated_qty", "During Period Fabricated"),
-        column("fabricated_qty", "Cumulative Fabricated"),
-        column("previous_erected_qty", "Before Period Erected"), column("period_erected_qty", "During Period Erected"),
-        column("erected_qty", "Cumulative Erected"),
-        column("executed_qty", "Cumulative Qty"), column("remaining_qty", "Remaining Qty"),
-        column("overrun_qty", "Overrun Qty"), column("percent_progress", "Progress %", "Percent"),
-        column("progress_weight", "Weight"), column("fabrication_progress_weight", "Fabrication % Weight"),
-        column("erection_progress_weight", "Erection % Weight"), column("allocation", "Allocation", "Data", width=180),
-        column("dpr", "DPR", "Link", "Daily Progress Report"), column("posting_date", "Date", "Date"),
+        column("project", "Project", "Link", "Project"), column("discipline", "Discipline", "Data", width=110),
+        column("work_done", "Work Done", "Data", width=110), column("item_code", "Item", "Link", "Item"),
+        column("uom", "UOM", "Link", "UOM", 80), column("budget_qty", "Approved Qty"),
+        column("reported_qty", "Recorded Qty"), column("fabricated_qty", "Fabricated To Date"),
+        column("erected_qty", "Erected To Date"), column("executed_qty", "Progress Qty"),
+        column("remaining_qty", "Remaining Qty"), column("percent_progress", "Progress %", "Percent"),
+        column("allocation", "Allocation", "Data", width=180),
+        column("dpr", "DPR", "Link", "Daily Progress Report"), column("posting_date", "Date", "Date"), column("remarks", "Remarks", "Data", width=180),
         column("boq_line_id", "BOQ Reference", "Data", width=180)]

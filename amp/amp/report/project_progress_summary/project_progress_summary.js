@@ -39,6 +39,6 @@ frappe.query_reports["Project Progress Summary"] = {
             options: '\nCivil\nStructural\nExcavation\nPiping\nDucting\nElectrical\nInstrumentation\nOther'},
         {fieldname: 'from_date', label: __('From Date (optional)'), fieldtype: 'Date'},
         {fieldname: 'to_date', label: __('To Date'), fieldtype: 'Date', default: frappe.datetime.get_today(), reqd: 1},
-        {fieldname: 'show_dprs', label: __('Show DPR Entries'), fieldtype: 'Check', default: 1}
+        {fieldname: 'show_dprs', label: __('Show DPR Diary Entries'), fieldtype: 'Check', default: 0}
     ]
 };

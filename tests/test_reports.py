@@ -140,12 +140,17 @@ class ReportTests(unittest.TestCase):
         line.update(discipline='Structural', fabrication_progress_weight=40, erection_progress_weight=60)
         self.frappe.tables['Daily Progress Item'][0].update(today_executed_qty=0, today_fabricated_qty=50, today_erected_qty=20)
         self.frappe.tables['Daily Progress Item'][1].update(today_executed_qty=0, today_fabricated_qty=10, today_erected_qty=10)
-        rows=self.progress.execute({'from_date':'2026-09-05', 'to_date':'2026-09-18'})[1]
+        rows=self.progress.execute({'from_date':'2026-09-05', 'to_date':'2026-09-18', 'show_dprs': 1})[1]
         structural=next(row for row in rows if row.get('boq_line_id') == 'L1')
         self.assertEqual((structural['fabricated_qty'], structural['erected_qty']), (60,30))
         self.assertEqual((structural['previous_fabricated_qty'], structural['period_fabricated_qty']), (50,10))
         self.assertEqual((structural['previous_erected_qty'], structural['period_erected_qty']), (20,10))
         self.assertEqual(structural['percent_progress'],42)
+        details = [row for row in rows if row.get('dpr')]
+        self.assertEqual(
+            {(row['dpr'], row['work_done'], row['reported_qty']) for row in details},
+            {('DPR1', 'Fabrication', 50), ('DPR1', 'Erection', 20), ('DPR2', 'Fabrication', 10), ('DPR2', 'Erection', 10)},
+        )
 
     def test_reject_reversed_dates(self):
         with self.assertRaisesRegex(ValueError, 'From Date'):
